@@ -1,0 +1,53 @@
+using : https://github.com/microsoft/sql-server-samples/tree/master/samples/databases/northwind-pubs
+
+#Tampilkan daftar konsumen yang berasal dari Jerman, diurutkan berdasarkan kota asalnya
+select *
+	from customers where country = 'Germany'
+    order by city ASC;
+#Tampilkan daftar yang berisi no order, tanggal transaksi, nama konsumen dan negara asalnya
+select o.OrderID, o.OrderDate, c.ContactName, c.Country
+	from orders o right join customers c on o.CustomerId = c.CustomerId;
+#Tampilkan jumlah semua transaksi yang pernah terjadi
+
+select Count(OrderID) from orders;
+#Tampilkan jumlah nota order yang pernah dilakukan oleh setiap konsumen
+
+select o.CustomerID, c.ContactName, Count(OrderID) as JumlahTransaksi 
+from orders o inner join customers c on o.CustomerID = c.CustomerID
+group by CustomerID,c.ContactName;
+#Tampilkan konsumen yang pernah melakukan lebih dari 5 order
+
+select CustomerID, Count(OrderID)  as JumlahTransaksi 
+	from orders 
+    group by CustomerID 
+    having count(OrderID) > 5  ;
+#Tampilkan nominal transaksi terkecil dari semua order yang ada
+
+select CustomerID,  min(tabel1.Nominal_Transaksi) 
+from(
+	select o.CustomerID, sum(od.UnitPrice * od.Quantity) as Nominal_Transaksi
+		from orders o inner join orderdetails od on o.OrderID = od.OrderID
+		group by o.OrderID
+) tabel1;
+#Tampilkan daftar yang berisi no order, tanggal transaksi, nama konsumen dan nama perusahaan ekspedisinya
+
+Select o.OrderID, o.OrderDate, c.ContactName, s.CompanyName
+	from orders o inner join customers c on o.CustomerID = c.CustomerID inner join shippers s on o.ShipVia = s.ShipperID;
+#Tampilkan daftar no order dan total nominal transaksi yang ada dalam order tersebut, dimana total nominal transaksi harus diatas 150 USD 
+
+select OrderID, sum(UnitPrice * Quantity) as GrandTotal
+	from orderdetails group by OrderID Having GrandTotal > 150;
+#Tampilkan jumlah stok barang yang terjual dalam setiap kategori
+
+select c.CategoryID, c.CategoryName, sum(od.Quantity)
+	from categories c left join products p on c.CategoryID = p.CategoryID 
+    inner join orderdetails od on od.ProductID = p.ProductID
+    group by c.CategoryID, c.CategoryName;
+#Tampilkan total nominal transaksi yang dilakukan oleh setiap konsumen yang berasal dari Jepang
+
+select c.ContactName, o.OrderID, sum(od.UnitPrice * od.Quantity) as NominalTransaksi
+	from orders o inner join orderdetails od on o.OrderID = od.OrderID inner join customers c on o.CustomerID = c.CustomerID
+    where c.Country = 'Germany'
+    group by c.CustomerID;
+    
+    
