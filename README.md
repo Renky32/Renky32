@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @Renky32
 - 👀 I’m interested in database
-- 🌱 I’m currently learning sql
+- 🌱 I’m currently learning SQL
 - 💞️ I’m looking to collaborate on project
 - 📫 How to reach me ricoah12@gmail.com
 
